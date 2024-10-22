@@ -1,0 +1,22 @@
+- hosts: jenkins-instance
+  become: true
+  gather_facts: true
+  roles:
+    - docker_setup
+    - kubectl-setup
+    - jenkins_setup
+
+- hosts: k3s-instance
+  become: true
+  gather_facts: true
+  roles:
+    - helm_setup
+
+- name: Copy config file to ~/.kube/ on remote machine using scp
+  hosts: localhost
+  tasks:
+    - name: Copy config file using scp
+      command: >
+        scp /home/ahmedkhalid/DEPI-DevOps-Project/ansible/config ubuntu@34.227.195.77:/home/ubuntu/.kube/config
+      args:
+        executable: /bin/bash

@@ -1,0 +1,15 @@
+
+- name: Download kubectl
+  command: >
+    sh -c "curl -LO \"https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl\""
+  register: kubectl_download
+  args:
+    chdir: /tmp
+
+- name: Make kubectl executable
+  command: chmod +x /tmp/kubectl
+  when: kubectl_download is succeeded
+
+- name: Move kubectl to /usr/local/bin
+  command: mv /tmp/kubectl /usr/local/bin/
+  when: kubectl_download is succeeded

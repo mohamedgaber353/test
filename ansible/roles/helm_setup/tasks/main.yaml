@@ -1,0 +1,54 @@
+
+# - name: Import Helm GPG key
+#   shell: curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+
+# - name: Install apt-transport-https package using command module
+#   command: apt-get install -y apt-transport-https
+
+# - name: Add Helm repository to APT sources
+#   shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee>
+
+# - name: Update APT package cache using command module
+#   command: apt update
+
+# - name: Install Helm
+#   apt:
+#     name: helm
+#     state: present
+
+
+# - name: Add Helm GPG key
+#   command: >
+#     curl -fsSL https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
+#   args:
+#     executable: /bin/bash  # Ensure commands run in bash
+
+# - name: Install apt-transport-https
+#   apt:
+#     name: apt-transport-https
+#     state: present
+#     update_cache: yes
+
+# - name: Add Helm APT repository
+#   lineinfile:
+#     path: /etc/apt/sources.list.d/helm-stable-debian.list
+#     line: "deb [arch={{ ansible_architecture }} signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+#     create: yes
+
+# - name: Update APT package index
+#   apt:
+#     update_cache: yes
+
+# - name: Install Helm
+#   apt:
+#     name: helm
+#     state: present
+
+- name: Download the Helm installation script
+  get_url:
+    url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    dest: /usr/local/bin/get_helm.sh
+    mode: '0755'  
+
+- name: Run the Helm installation script
+  command: /usr/local/bin/get_helm.sh
